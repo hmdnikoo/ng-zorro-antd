@@ -47,6 +47,9 @@
     @{list} {
       flex: 0 0 auto;
       float: left;
+      [dir="rtl"] &{
+        float:right;
+      }
     }
   }
   .col(1); // kickstart it
@@ -66,6 +69,10 @@
   }
   .@{ant-prefix}-col@{class}-offset-@{index} {
     margin-left: percentage((@index / @grid-columns));
+    [dir="rtl"] &{
+      margin-left: auto;
+      margin-right: percentage((@index / @grid-columns));
+    }
   }
   .@{ant-prefix}-col@{class}-order-@{index} {
     order: @index;

@@ -6,13 +6,11 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
-import addMonths from 'date-fns/add_months';
-import addYears from 'date-fns/add_years';
-import endOfMonth from 'date-fns/end_of_month';
-import setDay from 'date-fns/set_day';
-import setMonth from 'date-fns/set_month';
+import * as momentNs from 'jalali-moment';
+// tslint:disable-next-line:no-duplicate-imports
+import { Moment } from 'jalali-moment';
 import { IndexableObject } from 'ng-zorro-antd/core';
-
+const moment = momentNs;
 /**
  * Wrapping kind APIs for date operating and unify
  * NOTE: every new API return new CandyDate object without side effects to the former Date object
@@ -20,25 +18,18 @@ import { IndexableObject } from 'ng-zorro-antd/core';
  * TODO: support format() against to angular's core API
  */
 export class CandyDate implements IndexableObject {
-  nativeDate: Date;
+  _moment: Moment;
   // locale: string; // Custom specified locale ID
 
-  constructor(date?: Date | string) {
-    // if (!(this instanceof CandyDate)) {
-    //   return new CandyDate(date);
-    // }
-
+  constructor(date?: Moment | Date | string, private dateLocale: string = 'en') {
     if (date) {
-      if (date instanceof Date) {
-        this.nativeDate = date;
-      } else if (typeof date === 'string') {
-        this.nativeDate = new Date(date);
-      } else {
-        throw new Error('The input date type is not supported ("Date" and "string" is now recommended)');
-      }
+      this._moment = moment(date);
     } else {
-      this.nativeDate = new Date();
+      this._moment = moment();
     }
+    // tslint:disable-no-parameter-reassignment
+    // dateLocale = 'fa';
+    this._moment.locale(dateLocale);
   }
 
   // getLocale(): string {
@@ -53,41 +44,40 @@ export class CandyDate implements IndexableObject {
   // ---------------------------------------------------------------------
   // | Native shortcuts
   // ---------------------------------------------------------------------
-
   getYear(): number {
-    return this.nativeDate.getFullYear();
+    return this._moment.year();
   }
 
   getMonth(): number {
-    return this.nativeDate.getMonth();
+    return this._moment.month();
   }
 
   getDay(): number {
-    return this.nativeDate.getDay();
+    return this._moment.day();
   }
 
   getTime(): number {
-    return this.nativeDate.getTime();
+    return this._moment.valueOf();
   }
 
   getDate(): number {
-    return this.nativeDate.getDate();
+    return this._moment.date();
   }
 
   getHours(): number {
-    return this.nativeDate.getHours();
+    return this._moment.hour();
   }
 
   getMinutes(): number {
-    return this.nativeDate.getMinutes();
+    return this._moment.minute();
   }
 
   getSeconds(): number {
-    return this.nativeDate.getSeconds();
+    return this._moment.second();
   }
 
   getMilliseconds(): number {
-    return this.nativeDate.getMilliseconds();
+    return this._moment.millisecond();
   }
 
   // ---------------------------------------------------------------------
@@ -95,273 +85,109 @@ export class CandyDate implements IndexableObject {
   // ---------------------------------------------------------------------
 
   clone(): CandyDate {
-    return new CandyDate(new Date(this.nativeDate));
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
   setHms(hour: number, minute: number, second: number): CandyDate {
-    const date = new Date(this.nativeDate);
-    date.setHours(hour, minute, second);
-    return new CandyDate(date);
+    const date = moment(this._moment);
+    date.set({
+      hour: hour,
+      minute: minute,
+      second: second
+    });
+    return new CandyDate(date, this.dateLocale);
   }
 
   setYear(year: number): CandyDate {
-    // return new CandyDate(setYear(this.date, year));
-    const date = new Date(this.nativeDate);
-    date.setFullYear(year);
-    return new CandyDate(date);
+    this._moment.year(year);
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
   addYears(amount: number): CandyDate {
-    return new CandyDate(addYears(this.nativeDate, amount));
+    this._moment.add(amount, 'years');
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
   // NOTE: month starts from 0
-  // NOTE: Don't use the native API for month manipulation as it not restrict the date when it overflows, eg. (new Date('2018-7-31')).setMonth(1) will be date of 2018-3-03 instead of 2018-2-28
   setMonth(month: number): CandyDate {
-    // const date = new Date(this.nativeDate);
-    // date.setMonth(month);
-    // return new CandyDate(date);
-    return new CandyDate(setMonth(this.nativeDate, month));
+    this._moment.month(month);
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
   addMonths(amount: number): CandyDate {
-    return new CandyDate(addMonths(this.nativeDate, amount));
+    this._moment.add(amount, 'months');
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
-  setDay(day: number, options?: { weekStartsOn: number }): CandyDate {
-    return new CandyDate(setDay(this.nativeDate, day, options));
+  setDay(day: number): CandyDate {
+    this._moment.day(day);
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
   setDate(amount: number): CandyDate {
-    const date = new Date(this.nativeDate);
-    date.setDate(amount);
-    return new CandyDate(date);
+    this._moment.date(amount);
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
+  setLocale(locale: string): CandyDate {
+    return new CandyDate(this._moment, locale);
+  }
   addDays(amount: number): CandyDate {
-    return this.setDate(this.getDate() + amount);
+    this._moment.add(amount, 'days');
+    return new CandyDate(this._moment, this.dateLocale);
   }
 
   endOf(grain: 'month'): CandyDate | null {
     switch (grain) {
       case 'month':
-        return new CandyDate(endOfMonth(this.nativeDate));
+        this._moment.endOf('month');
+        return new CandyDate(this._moment, this.dateLocale);
     }
     return null;
   }
 
-  isSame(date: CandyDate | Date, grain: CandyDateCompareGrain): boolean {
+  isSame(date: Moment | CandyDate | Date, grain: CandyDateCompareGrain): boolean {
     // TODO: Precipitate into a function "compare()"
     if (date) {
-      const left = this.toNativeDate();
-      const right = this.toNativeDate(date);
-      switch (grain) {
-        case 'year':
-          return left.getFullYear() === right.getFullYear();
-        case 'month':
-          return left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth();
-        case 'day':
-          return (
-            left.getFullYear() === right.getFullYear() &&
-            left.getMonth() === right.getMonth() &&
-            left.getDate() === right.getDate()
-          );
-        case 'hour':
-          return (
-            left.getFullYear() === right.getFullYear() &&
-            left.getMonth() === right.getMonth() &&
-            left.getDate() === right.getDate() &&
-            left.getHours() === right.getHours()
-          );
-        case 'minute':
-          return (
-            left.getFullYear() === right.getFullYear() &&
-            left.getMonth() === right.getMonth() &&
-            left.getDate() === right.getDate() &&
-            left.getHours() === right.getHours() &&
-            left.getMinutes() === right.getMinutes()
-          );
-        case 'second':
-          return (
-            left.getFullYear() === right.getFullYear() &&
-            left.getMonth() === right.getMonth() &&
-            left.getDate() === right.getDate() &&
-            left.getHours() === right.getHours() &&
-            left.getMinutes() === right.getMinutes() &&
-            left.getSeconds() === right.getSeconds()
-          );
-      }
+      const left = this.toMoment();
+      const right = this.toMoment(date);
+      return left.isSame(right, grain);
     }
     return false;
   }
 
-  isAfter(date: CandyDate | Date | null, grain: CandyDateCompareGrain): boolean {
+  isAfter(date: Moment | CandyDate | Date | null, grain: CandyDateCompareGrain): boolean {
     // TODO: Precipitate into a function "compare()"
     if (date) {
-      const left = this.toNativeDate();
-      const right = this.toNativeDate(date);
-      switch (grain) {
-        case 'year':
-          return left.getFullYear() > right.getFullYear();
-        case 'month':
-          return (
-            left.getFullYear() > right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() > right.getMonth())
-          );
-        case 'day':
-          return (
-            left.getFullYear() > right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() > right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() > right.getDate())
-          );
-        case 'hour':
-          return (
-            left.getFullYear() > right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() > right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() > right.getDate()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() > right.getHours())
-          );
-        case 'minute':
-          return (
-            left.getFullYear() > right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() > right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() > right.getDate()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() > right.getHours()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() === right.getHours() &&
-              left.getMinutes() > right.getMinutes())
-          );
-        case 'second':
-          return (
-            left.getFullYear() > right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() > right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() > right.getDate()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() > right.getHours()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() === right.getHours() &&
-              left.getMinutes() > right.getMinutes()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() === right.getHours() &&
-              left.getMinutes() === right.getMinutes() &&
-              left.getSeconds() > right.getSeconds())
-          );
-      }
+      const left = this.toMoment();
+      const right = this.toMoment(date);
+      return left.isAfter(right, grain);
     }
     return false;
   }
 
   // TODO: Precipitate into a function "compare()"
-  isBefore(date: CandyDate | Date | null, grain: CandyDateCompareGrain): boolean {
+  isBefore(date: Moment | CandyDate | Date | null, grain: CandyDateCompareGrain): boolean {
+    // TODO: Precipitate into a function "compare()"
     if (date) {
-      const left = this.toNativeDate();
-      const right = this.toNativeDate(date);
-      switch (grain) {
-        case 'year':
-          return left.getFullYear() < right.getFullYear();
-        case 'month':
-          return (
-            left.getFullYear() < right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() < right.getMonth())
-          );
-        case 'day':
-          return (
-            left.getFullYear() < right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() < right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() < right.getDate())
-          );
-        case 'hour':
-          return (
-            left.getFullYear() < right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() < right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() < right.getDate()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() < right.getHours())
-          );
-        case 'minute':
-          return (
-            left.getFullYear() < right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() < right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() < right.getDate()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() < right.getHours()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() === right.getHours() &&
-              left.getMinutes() < right.getMinutes())
-          );
-        case 'second':
-          return (
-            left.getFullYear() < right.getFullYear() ||
-            (left.getFullYear() === right.getFullYear() && left.getMonth() < right.getMonth()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() < right.getDate()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() < right.getHours()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() === right.getHours() &&
-              left.getMinutes() < right.getMinutes()) ||
-            (left.getFullYear() === right.getFullYear() &&
-              left.getMonth() === right.getMonth() &&
-              left.getDate() === right.getDate() &&
-              left.getHours() === right.getHours() &&
-              left.getMinutes() === right.getMinutes() &&
-              left.getSeconds() < right.getSeconds())
-          );
-      }
+      const left = this.toMoment();
+      const right = this.toMoment(date);
+      return left.isBefore(right, grain);
     }
     return false;
   }
 
   // Equal to today accurate to "day"
   isToday(): boolean {
-    return this.isSame(new Date(), 'day');
+    return this.isSame(moment(), 'day');
   }
 
   isInvalid(): boolean {
-    return isNaN(this.nativeDate.valueOf());
+    return isNaN(this._moment.valueOf());
   }
 
-  private toNativeDate(date: CandyDate | Date = this): Date {
-    return date instanceof CandyDate ? date.nativeDate : date;
+  private toMoment(date: Moment | CandyDate | Date = this): Moment {
+    return date instanceof CandyDate ? date._moment : moment(date);
   }
 
   // compare(date: CandyDate, Date, grain: CandyDateCompareGrain = 'millisecond'): number {
