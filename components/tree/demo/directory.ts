@@ -24,7 +24,7 @@ import { NzContextMenuService, NzDropdownMenuComponent, NzFormatEmitEvent, NzTre
         </span>
       </span>
     </ng-template>
-    <nz-dropdown-menu #menu="nzDropdownMenu" [nzPlacement]="bottomLeft">
+    <nz-dropdown-menu #menu="nzDropdownMenu">
       <ul nz-menu>
         <li nz-menu-item (click)="selectDropdown()">Action 1</li>
         <li nz-menu-item (click)="selectDropdown()">Action 2</li>
