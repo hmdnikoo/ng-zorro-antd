@@ -3,9 +3,9 @@ import { CandyDate } from './candy-date';
 describe('candy-date coverage supplements', () => {
   const date = new CandyDate('2018-5-5 12:12:12');
 
-  it('support getTime', () => expect(date.getTime()).toBe(date.nativeDate.getTime()));
+  it('support getTime', () => expect(date.getTime()).toBe(date._moment.valueOf()));
 
-  it('support getMilliseconds', () => expect(date.getMilliseconds()).toBe(date.nativeDate.getMilliseconds()));
+  it('support getMilliseconds', () => expect(date.getMilliseconds()).toBe(date._moment.millisecond()));
 
   it('support endOf', () => {
     expect(date.endOf('month')!.getDate()).toBe(31);

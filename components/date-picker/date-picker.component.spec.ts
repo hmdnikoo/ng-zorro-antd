@@ -1,7 +1,7 @@
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { registerLocaleData } from '@angular/common';
-import zh from '@angular/common/locales/zh';
+import en_US from '@angular/common/locales/zh';
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { fakeAsync, flush, inject, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -10,12 +10,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import isSameDay from 'date-fns/is_same_day';
 
 import { dispatchKeyboardEvent, dispatchMouseEvent, NgStyleInterface } from 'ng-zorro-antd/core';
-import en_US from '../i18n/languages/en_US';
 
 import { NzI18nModule, NzI18nService } from 'ng-zorro-antd/i18n';
 import { NzDatePickerModule } from './date-picker.module';
 
-registerLocaleData(zh);
+registerLocaleData(en_US);
 
 describe('NzDatePickerComponent', () => {
   let fixture: ComponentFixture<NzTestDatePickerComponent>;

@@ -10,11 +10,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnChanges,
   OnInit,
-  Optional,
   Output,
   SimpleChange,
   SimpleChanges,
@@ -26,8 +24,7 @@ import * as momentNs from 'jalali-moment';
 // tslint:disable-next-line:no-duplicate-imports
 import { Moment } from 'jalali-moment';
 import { isNonEmptyString, isTemplateRef, valueFunctionProp, FunctionProp } from 'ng-zorro-antd/core';
-import { NzCalendarI18nInterface, WeekDayIndex } from 'ng-zorro-antd/i18n';
-import { mergeDateConfig, NzDateConfig, NZ_DATE_CONFIG } from '../../../i18n/date-config';
+import { DateHelperService, NzCalendarI18nInterface, WeekDayIndex } from 'ng-zorro-antd/i18n';
 import { CandyDate } from '../candy-date/candy-date';
 import { WeekDayLabel } from '../date/date-table.component';
 const moment = momentNs;
@@ -66,9 +63,7 @@ export class DateTableComponent implements OnInit, OnChanges {
   isNonEmptyString = isNonEmptyString;
   private readonly DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 
-  constructor(@Optional() @Inject(NZ_DATE_CONFIG) protected dateConfig: NzDateConfig) {
-    this.dateConfig = mergeDateConfig(this.dateConfig);
-  }
+  constructor(protected dateHelperService: DateHelperService) {}
   ngOnInit(): void {
     this.value._moment.locale(this.dateLocale);
   }
@@ -158,12 +153,9 @@ export class DateTableComponent implements OnInit, OnChanges {
   getWeekdayName(weekday: Moment, format: string = 'dd'): string {
     return weekday.format(format);
   }
-  getfirstDayOfWeek(): WeekDayIndex {
-    return this.dateConfig.firstDayOfWeek == null ? 1 : this.dateConfig.firstDayOfWeek;
-  }
   private makeHeadWeekDays(): { [key: string]: WeekDayLabel } {
     const weekDays: { [key: string]: WeekDayLabel } = {};
-    const firstDayOfWeek = this.getfirstDayOfWeek();
+    const firstDayOfWeek = this.dateHelperService.getFirstDayOfWeek();
     const weekdaysMoment = this.generateWeekdays(firstDayOfWeek, this.dateLocale);
     for (const i in weekdaysMoment) {
       weekDays[i] = {
@@ -176,7 +168,7 @@ export class DateTableComponent implements OnInit, OnChanges {
 
   private makeWeekRows(): WeekRow[] {
     const weekRows: WeekRow[] = [];
-    const firstDayOfWeek = this.getfirstDayOfWeek();
+    const firstDayOfWeek = this.dateHelperService.getFirstDayOfWeek();
     const firstDateOfMonth = this.value.clone().setDate(1);
     const firstDateOffset = (firstDateOfMonth.getDay() + 7 - firstDayOfWeek) % 7;
     const firstDateToShow = firstDateOfMonth.clone().addDays(0 - firstDateOffset);

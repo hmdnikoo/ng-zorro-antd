@@ -14,13 +14,23 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Inject, Injectable, Injector, Optional } from '@angular/core';
-import { mergeDateConfig, NzDateConfig, NZ_DATE_CONFIG } from './date-config';
-import { NzI18nService } from './nz-i18n.service';
 
 import * as momentNs from 'jalali-moment';
 // tslint:disable-next-line:no-duplicate-imports
 import { Moment } from 'jalali-moment';
+
+import { mergeDateConfig, NzDateConfig, NZ_DATE_CONFIG } from './date-config';
+import { NzI18nService } from './nz-i18n.service';
+
 export function DATE_HELPER_SERVICE_FACTORY(injector: Injector, config: NzDateConfig): DateHelperService {
   const i18n = injector.get(NzI18nService);
   return new DateHelperByDatePipe(i18n, config);

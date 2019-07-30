@@ -13,7 +13,7 @@
 <ng-container *ngIf="showTimePicker && timeOptions">
   <nz-time-picker-panel
     [nzInDatePicker]="true"
-    [ngModel]="value.nativeDate"
+    [ngModel]="value._moment"
     (ngModelChange)="onSelectTime($event)"
     [format]="timeOptions.nzFormat"
     [nzHourStep]="timeOptions.nzHourStep"
