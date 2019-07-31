@@ -10,8 +10,13 @@ const colorGenerate = require('../../site/generateColorLess');
 
 const docsGlob = join(buildConfig.componentsDir, `**/doc/*.+(md|txt)`);
 const demoGlob = join(buildConfig.componentsDir, `**/demo/*.+(md|ts)`);
-const issueHelperScriptFile = join(buildConfig.scriptsDir, 'release-helper.sh');
 const tsconfigFile = join(buildConfig.projectDir, 'site/tsconfig.app.json');
+
+let issueHelperScriptFile = join(buildConfig.scriptsDir, 'release-helper.sh');
+const isRunningOnWindows = process.platform === "win32";
+if (isRunningOnWindows) { // On windows operationg system bash script path as argument should be relative.
+  issueHelperScriptFile = join('./scripts/', 'release-helper.sh').replace(/\\/g, '/');
+}
 
 /**
  * Development app watch task,
