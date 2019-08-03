@@ -23,7 +23,7 @@
     "integration-rollup": "npm run build:lib&& cd integration/rollup && npm run integration",
     "integration-webpack": "npm run build:lib && cd integration/webpack && npm run integration",
     "integration": "npm run build:lib && bash ./integration-test.sh",
-    "install": "npm run build"
+    "install": "npm install && npm run build"
   },
   "dependencies": {
     "@angular/cdk": "^8.0.0",
