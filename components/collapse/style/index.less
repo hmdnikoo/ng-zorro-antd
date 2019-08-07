@@ -71,6 +71,11 @@
         .@{collapse-prefix-cls}-arrow {
           right: @padding-md;
           left: initial;
+          background-color: red;
+          [dir = "rtl"] & {
+            right: initial;
+            left: @padding-md;
+          }
         }
       }
     }

@@ -24,6 +24,10 @@
   opacity: 0;
   transition: color 0.3s ease, opacity 0.15s ease;
   text-rendering: auto;
+  [dir = "rtl"] & {
+    left: @control-padding-horizontal - 1px;
+    right: initial;
+  }
   &::before {
     display: block;
   }
@@ -63,7 +67,10 @@
     font-size: @font-size-sm;
     line-height: 1;
     transform-origin: 50% 50%;
-
+    [dir = "rtl"] & {
+      left: @control-padding-horizontal - 1px;
+      right: initial;
+    }
     & &-icon svg {
       transition: transform 0.3s;
     }
@@ -107,6 +114,11 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      [dir = "rtl"] & {
+        float: right;
+        padding-left: 20px;
+        padding-right: 0;
+      }
     }
   }
 
@@ -213,6 +225,10 @@
     .@{select-prefix-cls}-selection__clear,
     .@{select-prefix-cls}-arrow {
       right: @control-padding-horizontal-sm;
+      [dir = "rtl"] & {
+        left: @control-padding-horizontal-sm;
+        right: initial;
+      }
     }
   }
 
@@ -245,6 +261,11 @@
     white-space: nowrap;
     text-align: left;
     text-overflow: ellipsis;
+    [dir="rtl"] & {
+      right: 0;
+      left: 9px;
+      text-align: right;
+    }
   }
 
   &-search__field__placeholder {
@@ -338,6 +359,12 @@
       &__disabled {
         padding: 0 10px;
       }
+      [dir = "rtl"] & {
+        float: right;
+        padding: 0 10px 0 20px;
+        margin-left: 4px;
+        margin-right: 0;
+      }
     }
 
     .@{select-prefix-cls}-selection__choice__content {
@@ -365,6 +392,10 @@
       &:hover {
         color: @icon-color-hover;
       }
+      [dir = "rtl"] & {
+        right: initial;
+        left: 4px;
+      }
     }
 
     .@{select-prefix-cls}-selection__clear,
@@ -375,6 +406,10 @@
 
   &-allow-clear &-selection--single &-selection-selected-value {
     padding-right: 16px;
+    [dir = "rtl"] & {
+      padding-left: 16px;
+      padding-right: 0;
+    }
   }
 
   &-allow-clear &-selection--multiple &-selection__rendered,
