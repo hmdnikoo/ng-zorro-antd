@@ -31,7 +31,8 @@
     "@angular/router": "file:lib/@angular/router",
     "core-js": "file:lib/core-js",
     "date-fns": "file:lib/date-fns",
-    "jalali-moment": "file:lib/jalali-moment",
+    "@types/moment-jalaali": "^0.7.4",
+    "jalali-moment": "^3.3.3",
     "ng-zorro-antd": "file:lib/ng-zorro-antd",
     "rxjs": "file:lib/rxjs",
     "zone.js": "file:lib/zone.js"
