@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Platform } from '@angular/cdk/platform';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
@@ -23,6 +24,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
   QueryList,
   Renderer2,
@@ -236,7 +238,8 @@ export class NzTableComponent<T = any> implements OnInit, AfterViewInit, OnDestr
     private cdr: ChangeDetectorRef,
     private i18n: NzI18nService,
     private platform: Platform,
-    elementRef: ElementRef
+    elementRef: ElementRef,
+    @Optional() private dir: Directionality
   ) {
     renderer.addClass(elementRef.nativeElement, 'ant-table-wrapper');
   }
@@ -306,5 +309,11 @@ export class NzTableComponent<T = any> implements OnInit, AfterViewInit, OnDestr
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  getLayoutDirection(): Direction {
+    return this.dir && this.dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+  isRtlLayout(): boolean {
+    return this.getLayoutDirection() === 'rtl';
   }
 }

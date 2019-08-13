@@ -33,6 +33,10 @@
     text-align: left;
     border-radius: @table-border-radius-base @table-border-radius-base 0 0;
     border-collapse: collapse;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
   }
 
   &-thead > tr > th {
@@ -42,6 +46,10 @@
     background: @table-header-bg;
     border-bottom: @border-width-base @border-style-base @border-color-split;
     transition: background 0.3s ease;
+
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &[colspan] {
       text-align: center;
@@ -59,6 +67,11 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
+
+      [dir="rtl"] & {
+        right: auto;
+        left:0;
+      }
 
       > svg {
         position: absolute;
@@ -85,7 +98,11 @@
         line-height: 1em;
         text-align: center;
         transition: all 0.3s;
-
+        
+        [dir="rtl"] & {
+          margin-left: auto;
+          margin-right: 0.57142857em;
+        }
         .@{table-prefix-cls}-column-sorter-up,
         .@{table-prefix-cls}-column-sorter-down {
           .iconfont-size-under-12px(11px);
@@ -373,6 +390,11 @@
       border: @border-width-base @border-style-base @border-color-split;
       border-right: 0;
       border-bottom: 0;
+
+      [dir="rtl"] & {
+        border: @border-width-base @border-style-base @border-color-split;
+        border-left:0;
+      }
     }
 
     &.@{table-prefix-cls}-empty {
@@ -405,6 +427,11 @@
     .@{table-prefix-cls}-thead > tr > th,
     .@{table-prefix-cls}-tbody > tr > td {
       border-right: @border-width-base @border-style-base @border-color-split;
+
+      [dir="rtl"] & {
+        border-right: none;
+        border-left: @border-width-base @border-style-base @border-color-split;
+      }
     }
   }
 
@@ -506,6 +533,9 @@
 
     &-select-all-custom {
       margin-right: 4px !important;
+      [dir="rtl"] &{
+        float: left;
+      }
     }
 
     .@{iconfont-css-prefix}-down {
@@ -640,6 +670,9 @@
     }
     &.@{table-prefix-cls}-hide-scrollbar .@{table-prefix-cls}-thead > tr > th:last-child {
       border-right-color: transparent;
+      [dir="rtl"] & {
+        border-left-color: transparent;
+      }
     }
   }
 

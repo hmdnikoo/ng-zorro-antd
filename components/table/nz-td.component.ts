@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +14,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  Optional,
   Output,
   SimpleChanges,
   ViewEncapsulation
@@ -63,11 +65,22 @@ export class NzTdComponent implements OnChanges {
     });
   }
 
-  constructor(private elementRef: ElementRef, private nzUpdateHostClassService: NzUpdateHostClassService) {}
+  constructor(
+    private elementRef: ElementRef,
+    private nzUpdateHostClassService: NzUpdateHostClassService,
+    @Optional() private dir: Directionality
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.nzIndentSize || changes.nzShowExpand || changes.nzShowCheckbox || changes.nzRight || changes.nzLeft) {
       this.setClassMap();
     }
+  }
+
+  getLayoutDirection(): Direction {
+    return this.dir && this.dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+  isRtlLayout(): boolean {
+    return this.getLayoutDirection() === 'rtl';
   }
 }
