@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { ENTER } from '@angular/cdk/keycodes';
 import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import {
@@ -277,7 +285,7 @@ export class NzUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
       headers: new HttpHeaders(args.headers)
     });
     return this.http.request(req).subscribe(
-      (event: HttpEvent<{}>) => {
+      (event: HttpEvent<unknown>) => {
         if (event.type === HttpEventType.UploadProgress) {
           if (event.total! > 0) {
             // tslint:disable-next-line:no-any
@@ -288,7 +296,8 @@ export class NzUploadBtnComponent implements OnInit, OnChanges, OnDestroy {
           args.onSuccess!(event.body, args.file, event);
         }
       },
-      err => {
+      // tslint:disable-next-line:no-any
+      (      err: any) => {
         this.abort(args.file);
         args.onError!(err, args.file);
       }
