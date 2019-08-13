@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { UploadXHRArgs } from 'ng-zorro-antd';
+import { UploadXHRArgs } from 'ng-zorro-antd/upload';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -26,7 +26,8 @@ export class NzDemoUploadCustomRequestComponent {
     });
     // Always returns a `Subscription` object. nz-upload would automatically unsubscribe it at correct time.
     return this.http.request(req).subscribe(
-      (event: HttpEvent<unknown>) => {
+      // tslint:disable-next-line no-any
+      (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress) {
           if (event.total! > 0) {
             // tslint:disable-next-line:no-any

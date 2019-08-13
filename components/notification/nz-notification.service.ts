@@ -6,9 +6,18 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Overlay } from '@angular/cdk/overlay';
 import { ApplicationRef, ComponentFactoryResolver, Injectable, Injector, TemplateRef } from '@angular/core';
 
+import { NzSingletonService } from 'ng-zorro-antd/core';
 import { NzMessageBaseService } from 'ng-zorro-antd/message';
 
 import { NzNotificationConfig } from './nz-notification-config';
@@ -24,8 +33,14 @@ export class NzNotificationService extends NzMessageBaseService<
   NzNotificationData,
   NzNotificationConfig
 > {
-  constructor(overlay: Overlay, injector: Injector, cfr: ComponentFactoryResolver, appRef: ApplicationRef) {
-    super(overlay, NzNotificationContainerComponent, injector, cfr, appRef, 'notification-');
+  constructor(
+    nzSingletonService: NzSingletonService,
+    overlay: Overlay,
+    injector: Injector,
+    cfr: ComponentFactoryResolver,
+    appRef: ApplicationRef
+  ) {
+    super(nzSingletonService, overlay, NzNotificationContainerComponent, injector, cfr, appRef, 'notification-');
   }
 
   // Shortcut methods

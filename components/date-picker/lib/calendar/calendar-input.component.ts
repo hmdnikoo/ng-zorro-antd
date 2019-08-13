@@ -9,16 +9,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 
 import { Moment } from 'jalali-moment';
+import { CandyDate } from 'ng-zorro-antd/core';
 import { NzCalendarI18nInterface } from 'ng-zorro-antd/i18n';
-import { CandyDate } from '../candy-date/candy-date';
+
 @Component({
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +38,9 @@ export class CalendarInputComponent implements OnInit {
   @Input() disabledDate: (d: Moment) => boolean;
 
   @Input() value: CandyDate;
+  @Input() autoFocus: boolean;
   @Output() readonly valueChange = new EventEmitter<CandyDate>();
+  @ViewChild('inputElement', { static: true }) inputRef: ElementRef;
 
   prefixCls: string = 'ant-calendar';
   invalidInputClass: string = '';
@@ -46,17 +51,19 @@ export class CalendarInputComponent implements OnInit {
     if (this.value) {
       this.value.setLocale(this.dateLocale);
     }
+    if (this.autoFocus) {
+      this.inputRef.nativeElement.focus();
+    }
   }
 
-  onInputKeyup(event: Event): void {
+  onInputKeyup(event: KeyboardEvent): void {
     const date = this.checkValidInputDate(event);
 
     if (!date || (this.disabledDate && this.disabledDate(date._moment))) {
       return;
     }
 
-    if (!date.isSame(this.value, 'second')) {
-      // Not same with original value
+    if (event.key === 'Enter') {
       this.value = date;
       this.valueChange.emit(this.value);
     }

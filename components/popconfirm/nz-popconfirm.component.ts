@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -20,7 +28,7 @@ import {
 } from '@angular/core';
 
 import { zoomBigMotion, InputBoolean, NzNoAnimationDirective } from 'ng-zorro-antd/core';
-import { NzToolTipComponent } from 'ng-zorro-antd/tooltip';
+import { NzTooltipBaseComponentLegacy, NzTooltipTrigger, NzToolTipComponent } from 'ng-zorro-antd/tooltip';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +38,12 @@ import { NzToolTipComponent } from 'ng-zorro-antd/tooltip';
   preserveWhitespaces: false,
   animations: [zoomBigMotion],
   templateUrl: './nz-popconfirm.component.html',
+  providers: [
+    {
+      provide: NzTooltipBaseComponentLegacy,
+      useExisting: NzPopconfirmComponent
+    }
+  ],
   styles: [
     `
       .ant-popover {
@@ -39,10 +53,6 @@ import { NzToolTipComponent } from 'ng-zorro-antd/tooltip';
   ]
 })
 export class NzPopconfirmComponent extends NzToolTipComponent {
-  _prefix = 'ant-popover-placement';
-  _trigger = 'click';
-  _hasBackdrop = true;
-
   @Input() nzOkText: string;
   @Input() nzOkType: string = 'primary';
   @Input() nzCancelText: string;
@@ -52,13 +62,17 @@ export class NzPopconfirmComponent extends NzToolTipComponent {
   @Output() readonly nzOnCancel: EventEmitter<void> = new EventEmitter();
   @Output() readonly nzOnConfirm: EventEmitter<void> = new EventEmitter();
 
+  _prefix = 'ant-popover-placement';
+  _trigger: NzTooltipTrigger = 'click';
+  _hasBackdrop = true;
+
   constructor(cdr: ChangeDetectorRef, @Host() @Optional() public noAnimation?: NzNoAnimationDirective) {
     super(cdr, noAnimation);
   }
 
   show(): void {
     if (!this.nzCondition) {
-      this.nzVisible = true;
+      super.show();
     } else {
       this.onConfirm();
     }
@@ -66,11 +80,11 @@ export class NzPopconfirmComponent extends NzToolTipComponent {
 
   onCancel(): void {
     this.nzOnCancel.emit();
-    this.nzVisible = false;
+    super.hide();
   }
 
   onConfirm(): void {
     this.nzOnConfirm.emit();
-    this.nzVisible = false;
+    super.hide();
   }
 }

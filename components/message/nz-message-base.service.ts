@@ -6,15 +6,31 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Overlay } from '@angular/cdk/overlay';
 import { ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Injector, Type } from '@angular/core';
+import { NzSingletonService } from 'ng-zorro-antd/core';
 
 import { NzMessageConfig } from './nz-message-config';
 import { NzMessageContainerComponent } from './nz-message-container.component';
 import { NzMessageData, NzMessageDataFilled, NzMessageDataOptions } from './nz-message.definitions';
 
 let globalCounter = 0;
-const containerMap = new Map<string, NzMessageContainerComponent>();
 
 export class NzMessageBaseService<
   ContainerClass extends NzMessageContainerComponent,
@@ -24,6 +40,7 @@ export class NzMessageBaseService<
   protected _container: ContainerClass;
 
   constructor(
+    private nzSingletonService: NzSingletonService,
     private overlay: Overlay,
     private containerClass: Type<ContainerClass>,
     private injector: Injector,
@@ -31,8 +48,8 @@ export class NzMessageBaseService<
     private appRef: ApplicationRef,
     private name: string = ''
   ) {
-    this._container = this.createContainer();
-    containerMap.set(this.name, this._container);
+    this._container = this.withContainer();
+    this.nzSingletonService.registerSingletonWithKey(this.name, this._container);
   }
 
   remove(messageId?: string): void {
@@ -67,10 +84,13 @@ export class NzMessageBaseService<
 
   // Manually creating container for overlay to avoid multi-checking error, see: https://github.com/NG-ZORRO/ng-zorro-antd/issues/391
   // NOTE: we never clean up the container component and it's overlay resources, if we should, we need to do it by our own codes.
-  private createContainer(): ContainerClass {
-    if (containerMap.has(this.name)) {
-      return containerMap.get(this.name) as ContainerClass;
+  private withContainer(): ContainerClass {
+    const containerInstance = this.nzSingletonService.getSingletonWithKey(this.name);
+
+    if (containerInstance) {
+      return containerInstance as ContainerClass;
     }
+
     const factory = this.cfr.resolveComponentFactory(this.containerClass);
     const componentRef = factory.create(this.injector); // Use root injector
     componentRef.changeDetectorRef.detectChanges(); // Immediately change detection to avoid multi-checking error

@@ -6,6 +6,22 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
   ChangeDetectionStrategy,
@@ -22,6 +38,8 @@ import {
   TemplateRef,
   ViewEncapsulation
 } from '@angular/core';
+
+import { Location } from '@angular/common';
 import { NzPageHeaderFooterDirective } from './nz-page-header-cells';
 
 @Component({
@@ -56,11 +74,10 @@ export class NzPageHeaderComponent implements OnInit, OnChanges {
   @Input() nzSubtitle: string | TemplateRef<void>;
   @Output() readonly nzBack = new EventEmitter<void>();
 
-  @ContentChild(NzPageHeaderFooterDirective, { static: false }) nzPageHeaderFooter: ElementRef<
-    NzPageHeaderFooterDirective
-  >;
+  @ContentChild(NzPageHeaderFooterDirective, { static: false })
+  nzPageHeaderFooter: ElementRef<NzPageHeaderFooterDirective>;
 
-  constructor(@Optional() private dir: Directionality) {}
+  constructor(private location: Location, @Optional() private dir: Directionality) {}
 
   ngOnInit(): void {}
 
@@ -75,6 +92,10 @@ export class NzPageHeaderComponent implements OnInit, OnChanges {
     return this.dir && this.dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
   onBack(): void {
-    this.nzBack.emit();
+    if (this.nzBack.observers.length) {
+      this.nzBack.emit();
+    } else {
+      this.location.back();
+    }
   }
 }
