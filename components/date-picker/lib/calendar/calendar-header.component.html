@@ -43,8 +43,8 @@
     <ng-container *ngSwitchCase="'decade'">
       <decade-panel
         [locale]="locale"
-        [value]="value",
-        [dateLocale]="dateLocale",
+        [value]="value"
+        [dateLocale]="dateLocale"
         (valueChange)="onChooseDecade($event)"
       ></decade-panel>
     </ng-container>
@@ -52,7 +52,7 @@
       <year-panel
         [locale]="locale"
         [value]="value"
-        [dateLocale]="dateLocale",
+        [dateLocale]="dateLocale"
         [disabledDate]="disabledYear"
         (valueChange)="onChooseYear($event)"
         (decadePanelShow)="changePanel('decade')"
@@ -62,7 +62,7 @@
       <month-panel
         [locale]="locale"
         [value]="value"
-        [dateLocale]="dateLocale",
+        [dateLocale]="dateLocale"
         [disabledDate]="disabledMonth"
         (valueChange)="onChooseMonth($event)"
         (yearPanelShow)="changePanel('year')"
