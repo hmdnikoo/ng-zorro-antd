@@ -41,7 +41,11 @@
       float: left;
       margin-right: 16px;
       font-size: 22px;
-
+      [dir = 'rtl'] & {
+        float: right;
+        margin-right: 0;
+        margin-left: 16px;
+      }
       // `content` after `icon` should set marginLeft
       + .@{confirm-prefix-cls}-title + .@{confirm-prefix-cls}-content {
         margin-left: 38px;
@@ -56,6 +60,13 @@
     button + button {
       margin-bottom: 0;
       margin-left: 8px;
+      [dir = 'rtl'] & {
+        margin-left: 0;
+        margin-right: 8px;
+      }
+    }
+    [dir = 'rtl'] & {
+      float: left;
     }
   }
 

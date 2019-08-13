@@ -60,6 +60,11 @@
     cursor: pointer;
     transition: color 0.3s;
 
+    [dir = "rtl"] & {
+      right: initial;
+      left: 0;
+    }
+
     &-x {
       display: block;
       width: 56px;
@@ -103,6 +108,14 @@
     button + button {
       margin-bottom: 0;
       margin-left: 8px;
+      [dir ="rtl" ] & {
+        margin-left: 0;
+        margin-right: 8px;
+      }
+    }
+
+    [dir = "rtl"] & {
+      text-align: left;
     }
   }
 
