@@ -50,6 +50,12 @@
     font-size: @font-size-sm;
     vertical-align: middle;
     transition: all 0.3s;
+
+    [dir = 'rtl'] & {
+      margin-left: -5px;
+      margin-right: 3px;
+    }
+
     &:hover {
       color: @heading-color;
     }
