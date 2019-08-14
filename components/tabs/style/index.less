@@ -184,6 +184,18 @@
       [dir = 'rtl'] & {
         margin: @tabs-horizontal-margin-rtl;
       }
+      
+      &::before {
+        position: absolute;
+        top: -1px;
+        left: 0;
+        width: 100%;
+        border-top: 2px solid transparent;
+        border-radius: @border-radius-base @border-radius-base 0 0;
+        transition: all 0.3s;
+        content: '';
+        pointer-events: none;
+      }
 
       &:last-child {
         margin-right: 0;
@@ -236,6 +248,13 @@
     .@{tab-prefix-cls}-tab {
       padding: @tabs-horizontal-padding-sm;
     }
+  }
+
+  // Create an empty element to avoid margin collapsing
+  // https://github.com/ant-design/ant-design/issues/18103
+  &-content::before {
+    display: table;
+    content: '';
   }
 
   // Horizontal Content

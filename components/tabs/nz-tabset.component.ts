@@ -95,6 +95,7 @@ export class NzTabSetComponent
   @ContentChildren(NzTabComponent) listOfNzTabComponent: QueryList<NzTabComponent>;
   @ViewChild(NzTabsNavComponent, { static: false }) nzTabsNavComponent: NzTabsNavComponent;
   @ViewChild('tabContent', { static: false }) tabContent: ElementRef;
+
   @Input() nzTabBarExtraContent: TemplateRef<void>;
   @Input() nzShowPagination = true;
   @Input() nzAnimated: NzAnimatedInterface | boolean = true;
@@ -106,7 +107,7 @@ export class NzTabSetComponent
   @Input() nzType: NzTabType = 'line';
 
   @Input() @InputBoolean() nzLinkRouter = false;
-  @Input() nzQueryParam: string;
+  @Input() @InputBoolean() nzLinkExact = true;
 
   @Output() readonly nzOnNextClick = new EventEmitter<void>();
   @Output() readonly nzOnPrevClick = new EventEmitter<void>();
@@ -354,6 +355,6 @@ export class NzTabSetComponent
   }
 
   private isLinkActive(router: Router): (link?: RouterLink | RouterLinkWithHref) => boolean {
-    return (link?: RouterLink | RouterLinkWithHref) => (link ? router.isActive(link.urlTree, true) : false);
+    return (link?: RouterLink | RouterLinkWithHref) => (link ? router.isActive(link.urlTree, this.nzLinkExact) : false);
   }
 }

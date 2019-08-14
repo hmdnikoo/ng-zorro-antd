@@ -19,8 +19,9 @@ import {
 } from '@angular/core';
 
 import { Moment } from 'jalali-moment';
+import { CandyDate } from 'ng-zorro-antd/core';
 import { NzCalendarI18nInterface } from 'ng-zorro-antd/i18n';
-import { CandyDate } from '../candy-date/candy-date';
+
 @Component({
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +32,7 @@ import { CandyDate } from '../candy-date/candy-date';
 })
 export class TodayButtonComponent implements OnInit, OnChanges {
   @Input() locale: NzCalendarI18nInterface;
+  @Input() dateLocale: string;
   @Input() hasTimePicker: boolean = false;
   @Input() disabledDate: (d: Moment) => boolean;
 
@@ -40,11 +42,13 @@ export class TodayButtonComponent implements OnInit, OnChanges {
   isDisabled: boolean = false;
   title: string;
 
-  private now: CandyDate = new CandyDate();
+  private now: CandyDate = new CandyDate(new Date(), this.dateLocale);
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.now = this.now.setLocale(this.dateLocale);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.disabledDate) {
@@ -54,9 +58,15 @@ export class TodayButtonComponent implements OnInit, OnChanges {
       const dateFormat: string = this.locale.dateFormat;
       this.title = this.now._moment.format(dateFormat);
     }
+    if (changes.dateLocale) {
+      this.now.setLocale(this.dateLocale);
+      const dateFormat: string = this.locale.dateFormat;
+      this.title = this.now._moment.format(dateFormat);
+    }
   }
 
   onClickToday(): void {
+    this.now = this.now.setLocale(this.dateLocale);
     this.clickToday.emit(this.now.clone()); // To prevent the "now" being modified from outside, we use clone
   }
 }

@@ -3,14 +3,15 @@ import zh from '@angular/common/locales/zh';
 
 import { fakeAsync, inject, TestBed } from '@angular/core/testing';
 
+import { DateTableComponent } from '../../calendar/date-table.component';
+import { CandyDate } from '../../core';
+import { DateHelperService } from '../../i18n/date-helper.service';
 import { NzI18nService } from '../../i18n/nz-i18n.service';
 import { AbstractPickerComponent } from '../abstract-picker.component';
+import { MonthTableComponent } from './../../calendar/month-table.component';
 import { CalendarHeaderComponent } from './calendar/calendar-header.component';
 import { TodayButtonComponent } from './calendar/today-button.component';
-import { CandyDate } from './candy-date/candy-date';
-import { DateTableComponent } from './date/date-table.component';
 import { LibPackerModule } from './lib-packer.module';
-import { MonthTableComponent } from './month/month-table.component';
 import { DateRangePopupComponent } from './popups/date-range-popup.component';
 import { YearPanelComponent } from './year/year-panel.component';
 
@@ -18,6 +19,7 @@ registerLocaleData(zh);
 
 describe('Coverage supplements', () => {
   let componentInstance: any; // tslint:disable-line:no-any
+  let dateHelper: DateHelperService;
   let i18n: NzI18nService;
 
   beforeEach(fakeAsync(() => {
@@ -28,9 +30,13 @@ describe('Coverage supplements', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([NzI18nService], (i18nService: NzI18nService) => {
-    i18n = i18nService;
-  }));
+  beforeEach(inject(
+    [NzI18nService, DateHelperService],
+    (i18nService: NzI18nService, dateHelperService: DateHelperService) => {
+      dateHelper = dateHelperService;
+      i18n = i18nService;
+    }
+  ));
 
   describe('CalendarHeader', () => {
     beforeEach(() => {
@@ -90,9 +96,10 @@ describe('Coverage supplements', () => {
     });
   }); // /TodayButton
 
+  // TODO: Unit test of date-table and month-table
   describe('DateTable', () => {
     beforeEach(() => {
-      componentInstance = new DateTableComponent(i18n);
+      componentInstance = new DateTableComponent(dateHelper, i18n);
     });
 
     it('should cover untouched branches', () => {
@@ -100,8 +107,6 @@ describe('Coverage supplements', () => {
       componentInstance.showWeek = true;
       const weekRows = componentInstance.makeWeekRows();
       expect(weekRows.length > 0).toBeTruthy();
-
-      expect(componentInstance.isBeforeMonthYear(new CandyDate('2018-11'), new CandyDate('2019-11'))).toBeTruthy();
     });
   }); // /DateTable
 
@@ -141,7 +146,7 @@ describe('Coverage supplements', () => {
 
       // sortRangeValue
       componentInstance.selectedValue = [end, start];
-      componentInstance.sortRangeValue('selectedValue');
+      componentInstance.sortRangeValue();
       expect(componentInstance.selectedValue[0].getDate()).toBe(11);
     });
   }); // /DateRangePopup

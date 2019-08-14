@@ -7,8 +7,15 @@
  */
 
 import { TemplateRef } from '@angular/core';
+import { CandyDate } from 'ng-zorro-antd/core';
 
-import { CandyDate } from './lib/candy-date/candy-date';
+export type PickerResult = PickerResultSingle | PickerResultRange;
+
+export type DisabledDateFn = (d: Moment) => boolean;
+
+export type DisabledTimePartial = 'start' | 'end';
+
+export type PanelMode = 'decade' | 'year' | 'month' | 'date' | 'time';
 
 import { Moment } from 'jalali-moment';
 // The common result data format (the range-picker's props can be result as array)
@@ -20,11 +27,6 @@ export interface PickerResultRange {
   date: CandyDate[];
   dateString: string[];
 }
-export type PickerResult = PickerResultSingle | PickerResultRange;
-
-export type DisabledDateFn = (d: Moment) => boolean;
-
-export type DisabledTimePartial = 'start' | 'end';
 
 export interface DisabledTimeConfig {
   nzDisabledHours(): number[];
@@ -50,5 +52,3 @@ export interface SupportTimeOptions {
 export interface PresetRanges {
   [key: string]: Moment[] | (() => Moment[]);
 }
-
-export type PanelMode = 'decade' | 'year' | 'month' | 'date' | 'time';

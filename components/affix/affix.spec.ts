@@ -313,23 +313,15 @@ describe('affix', () => {
       }));
     });
 
-    it('should be re-register listener', () => {
-      spyOn(component, 'updatePosition');
-      expect(component.updatePosition).not.toHaveBeenCalled();
-      fixture.detectChanges();
-      context.fakeTarget = window;
-      fixture.detectChanges();
-      expect(component.updatePosition).toHaveBeenCalled();
-    });
-
-    it('should be a string value', () => {
+    it('should be a string value', fakeAsync(() => {
       spyOn(component, 'updatePosition');
       expect(component.updatePosition).not.toHaveBeenCalled();
       fixture.detectChanges();
       context.fakeTarget = '#target';
       fixture.detectChanges();
+      tick();
       expect(component.updatePosition).toHaveBeenCalled();
-    });
+    }));
   });
 
   describe('(nzChange)', () => {
@@ -483,7 +475,8 @@ describe('affix-extra', () => {
       left: 5,
       width: 200,
       height: 20
-    });
+      // tslint:disable-next-line:no-any
+    } as any);
     window.dispatchEvent(new Event('scroll'));
     tick(30);
     fixture.detectChanges();

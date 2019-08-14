@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   forwardRef,
   ChangeDetectionStrategy,
@@ -22,12 +21,9 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import * as momentNs from 'jalali-moment';
-// tslint:disable-next-line:no-duplicate-imports
-import { Moment } from 'jalali-moment';
-const moment = momentNs;
-import { NzI18nService } from 'ng-zorro-antd/i18n';
 
+import { Moment } from 'jalali-moment';
+import { toBoolean, warnDeprecation, CandyDate, InputBoolean } from 'ng-zorro-antd/core';
 import {
   NzDateCellDirective as DateCell,
   NzDateFullCellDirective as DateFullCell,
@@ -36,6 +32,7 @@ import {
 } from './nz-calendar-cells';
 
 export type ModeType = 'month' | 'year';
+export type DateTemplate = TemplateRef<{ $implicit: Date }>;
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -46,148 +43,98 @@ export type ModeType = 'month' | 'year';
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NzCalendarComponent), multi: true }]
 })
 export class NzCalendarComponent implements ControlValueAccessor, OnInit {
-  @Input() nzMode: ModeType = 'month';
-  @Output() readonly nzModeChange: EventEmitter<ModeType> = new EventEmitter();
-  @Output() readonly nzPanelChange: EventEmitter<{ date: Moment; mode: ModeType }> = new EventEmitter();
+  activeDate: CandyDate = new CandyDate();
+  prefixCls: string = 'ant-fullcalendar';
 
-  @Output() readonly nzSelectChange: EventEmitter<Moment> = new EventEmitter();
-
-  @Input() set nzValue(value: Moment) {
-    this.updateDate(value, false);
-  }
-  @Output() readonly nzValueChange: EventEmitter<Moment> = new EventEmitter();
-
-  @Input()
-  set nzDateCell(value: TemplateRef<{ $implicit: Moment }>) {
-    this.dateCell = value;
-  }
-
-  @Input()
-  set nzDateFullCell(value: TemplateRef<{ $implicit: Moment }>) {
-    this.dateFullCell = value;
-  }
-
-  @Input()
-  set nzMonthCell(value: TemplateRef<{ $implicit: Moment }>) {
-    this.monthCell = value;
-  }
-
-  @Input()
-  set nzMonthFullCell(value: TemplateRef<{ $implicit: Moment }>) {
-    this.monthFullCell = value;
-  }
-
-  @Input()
-  set nzFullscreen(value: boolean) {
-    this.fullscreen = coerceBooleanProperty(value);
-  }
-  get nzFullscreen(): boolean {
-    return this.fullscreen;
-  }
-
-  @Input()
-  set nzCard(value: boolean) {
-    this.fullscreen = !coerceBooleanProperty(value);
-  }
-  get nzCard(): boolean {
-    return !this.fullscreen;
-  }
-
-  @ContentChild(DateCell, { static: false, read: TemplateRef })
-  set dateCellChild(value: TemplateRef<{ $implicit: Moment }>) {
-    if (value) {
-      this.dateCell = value;
-    }
-  }
-
-  @ContentChild(DateFullCell, { static: false, read: TemplateRef })
-  set dateFullCellChild(value: TemplateRef<{ $implicit: Moment }>) {
-    if (value) {
-      this.dateFullCell = value;
-    }
-  }
-
-  @ContentChild(MonthCell, { static: false, read: TemplateRef })
-  set monthCellChild(value: TemplateRef<{ $implicit: Moment }>) {
-    if (value) {
-      this.monthCell = value;
-    }
-  }
-
-  @ContentChild(MonthFullCell, { static: false, read: TemplateRef })
-  set monthFullCellChild(value: TemplateRef<{ $implicit: Moment }>) {
-    if (value) {
-      this.monthFullCell = value;
-    }
-  }
-
-  @HostBinding('class.ant-fullcalendar--fullscreen')
-  fullscreen = true;
-
-  daysInWeek: DayCellContext[] = [];
-  monthsInYear: MonthCellContext[] = [];
-  dateMatrix: DateCellContext[][] = [];
-  activeDate: Moment = moment();
-  currentDateRow: number = -1;
-  currentDateCol: number = -1;
-  activeDateRow: number = -1;
-  activeDateCol: number = -1;
-  currentMonthRow: number = -1;
-  currentMonthCol: number = -1;
-  activeMonthRow: number = -1;
-  activeMonthCol: number = -1;
-  dateCell: TemplateRef<{ $implicit: Moment }> | null = null;
-  dateFullCell: TemplateRef<{ $implicit: Moment }> | null = null;
-  monthCell: TemplateRef<{ $implicit: Moment }> | null = null;
-  monthFullCell: TemplateRef<{ $implicit: Moment }> | null = null;
-
-  private currentDate = moment();
   private onChangeFn: (date: Moment) => void = () => {};
   private onTouchFn: () => void = () => {};
 
-  private get calendarStart(): Moment {
-    return this.activeDate
-      .clone()
-      .startOf('month')
-      .startOf('week');
+  @Input() nzMode: ModeType = 'month';
+  @Input() dateLocale: string;
+
+  @Output() readonly nzModeChange: EventEmitter<ModeType> = new EventEmitter();
+  @Output() readonly nzPanelChange: EventEmitter<{ date: Moment; mode: ModeType }> = new EventEmitter();
+  @Output() readonly nzSelectChange: EventEmitter<Moment> = new EventEmitter();
+
+  @Input() set nzValue(value: Moment) {
+    this.updateDate(new CandyDate(value), false);
+  }
+  @Output() readonly nzValueChange: EventEmitter<Moment> = new EventEmitter();
+
+  /**
+   * Cannot use @Input and @ContentChild on one variable
+   * because { static: false } will make @Input property get delayed
+   **/
+  @Input() nzDateCell: DateTemplate;
+  @ContentChild(DateCell, { static: false, read: TemplateRef }) nzDateCellChild: DateTemplate;
+  get dateCell(): DateTemplate {
+    return this.nzDateCell || this.nzDateCellChild;
   }
 
-  constructor(private i18n: NzI18nService, private cdr: ChangeDetectorRef) {}
+  @Input() nzDateFullCell: DateTemplate;
+  @ContentChild(DateFullCell, { static: false, read: TemplateRef }) nzDateFullCellChild: DateTemplate;
+  get dateFullCell(): DateTemplate {
+    return this.nzDateFullCell || this.nzDateFullCellChild;
+  }
+
+  @Input() nzMonthCell: DateTemplate;
+  @ContentChild(MonthCell, { static: false, read: TemplateRef }) nzMonthCellChild: DateTemplate;
+  get monthCell(): DateTemplate {
+    return this.nzMonthCell || this.nzMonthCellChild;
+  }
+
+  @Input() nzMonthFullCell: DateTemplate;
+  @ContentChild(MonthFullCell, { static: false, read: TemplateRef }) nzMonthFullCellChild: DateTemplate;
+  get monthFullCell(): DateTemplate {
+    return this.nzMonthFullCell || this.nzMonthFullCellChild;
+  }
+
+  @Input()
+  @InputBoolean()
+  @HostBinding('class.ant-fullcalendar--fullscreen')
+  nzFullscreen: boolean = true;
+
+  /**
+   * @deprecated use `[nzFullscreen]` instead.
+   */
+  @Input()
+  set nzCard(value: boolean) {
+    warnDeprecation(`'nzCard' is going to be removed in 9.0.0. Please use 'nzFullscreen' instead.`);
+    this.nzFullscreen = !toBoolean(value);
+  }
+  get nzCard(): boolean {
+    return !this.nzFullscreen;
+  }
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.setUpDaysInWeek();
-    this.setUpMonthsInYear();
-    this.setUpDateMatrix();
-    this.calculateCurrentDate();
-    this.calculateActiveDate();
-    this.calculateCurrentMonth();
-    this.calculateActiveMonth();
+    this.activeDate.setLocale(this.dateLocale);
   }
 
   onModeChange(mode: ModeType): void {
     this.nzModeChange.emit(mode);
-    this.nzPanelChange.emit({ date: this.activeDate, mode });
-  }
-
-  onDateSelect(date: Moment): void {
-    this.updateDate(date);
-    this.nzSelectChange.emit(date);
+    this.nzPanelChange.emit({ date: this.activeDate._moment, mode });
   }
 
   onYearSelect(year: number): void {
-    const date = this.activeDate.clone().year(year);
+    const date = this.activeDate.setYear(year);
     this.updateDate(date);
-    this.nzSelectChange.emit(date);
   }
 
   onMonthSelect(month: number): void {
-    const date = this.activeDate.clone().month(month);
+    const date = this.activeDate.setMonth(month);
     this.updateDate(date);
-    this.nzSelectChange.emit(date);
   }
 
-  writeValue(value: Moment | null): void {
-    this.updateDate(value || moment(), false);
+  onDateSelect(date: CandyDate): void {
+    // Only activeDate is enough in calendar
+    // this.value = date;
+    this.updateDate(date);
+  }
+
+  writeValue(value: Date | null): void {
+    this.updateDate(new CandyDate(value as Date), false);
     this.cdr.markForCheck();
   }
 
@@ -199,124 +146,14 @@ export class NzCalendarComponent implements ControlValueAccessor, OnInit {
     this.onTouchFn = fn;
   }
 
-  private updateDate(date: Moment, touched: boolean = true): void {
-    const dayChanged = !date.isSame(this.activeDate, 'day');
-    const monthChanged = !date.isSame(this.activeDate, 'month');
-    const yearChanged = !date.isSame(this.activeDate, 'year');
-
+  private updateDate(date: CandyDate, touched: boolean = true): void {
     this.activeDate = date;
 
-    if (dayChanged) {
-      this.calculateActiveDate();
-    }
-    if (monthChanged) {
-      this.setUpDateMatrix();
-      this.calculateCurrentDate();
-      this.calculateActiveMonth();
-    }
-    if (yearChanged) {
-      this.calculateCurrentMonth();
-    }
-
     if (touched) {
-      this.onChangeFn(date);
+      this.onChangeFn(date._moment);
       this.onTouchFn();
-      this.nzValueChange.emit(date);
+      this.nzSelectChange.emit(date._moment);
+      this.nzValueChange.emit(date._moment);
     }
   }
-
-  private setUpDaysInWeek(): void {
-    this.daysInWeek = [];
-    const weekStart = this.activeDate.clone().startOf('isoWeek');
-    for (let i = 0; i < 7; i++) {
-      const date = weekStart.clone().date(i);
-      const title = date.format('DD');
-      const label = date.format('DD');
-      this.daysInWeek.push({ title, label });
-    }
-  }
-
-  private setUpMonthsInYear(): void {
-    this.monthsInYear = [];
-    for (let i = 0; i < 12; i++) {
-      const date = this.activeDate.clone().month(i);
-      const title = date.format('MMM');
-      const label = date.format('MMM');
-      const start = date.clone().startOf('month');
-      this.monthsInYear.push({ title, label, start });
-    }
-  }
-
-  private setUpDateMatrix(): void {
-    this.dateMatrix = [];
-    const monthStart = this.activeDate.clone().startOf('month');
-    const monthEnd = this.activeDate.clone().endOf('month');
-    const weekDiff = monthEnd.diff(monthStart, 'weeks', true) + 2;
-
-    for (let week = 0; week < weekDiff; week++) {
-      const row: DateCellContext[] = [];
-      const weekStart = this.calendarStart.clone().add(week * 7, 'days');
-
-      for (let day = 0; day < 7; day++) {
-        const date = weekStart.clone().add(day, 'days');
-        const monthDiff = date.diff(this.activeDate, 'months');
-        const dateFormat = this.i18n.getLocaleData('DatePicker.lang.dateFormat', 'YYYY/MM/DD');
-        const title = date.format(dateFormat);
-        const label = date.format('DD');
-        const rel = monthDiff === 0 ? 'current' : monthDiff < 0 ? 'last' : 'next';
-        row.push({ title, label, rel, value: date });
-      }
-      this.dateMatrix.push(row);
-    }
-  }
-
-  private calculateCurrentDate(): void {
-    if (this.activeDate.isSame(moment(), 'month')) {
-      this.currentDateRow = this.currentDate.diff(this.calendarStart, 'weeks');
-      this.currentDateCol = this.currentDate.diff(this.calendarStart.clone().add(this.currentDateRow * 7, 'days'));
-    } else {
-      this.currentDateRow = -1;
-      this.currentDateCol = -1;
-    }
-  }
-
-  private calculateActiveDate(): void {
-    this.activeDateRow = this.activeDate.diff(this.calendarStart, 'weeks');
-    this.activeDateCol = this.activeDate.diff(this.calendarStart.clone().add(this.activeDateRow * 7, 'days'));
-  }
-
-  private calculateCurrentMonth(): void {
-    if (this.activeDate.isSame(moment(), 'year')) {
-      const yearStart = this.currentDate.clone().startOf('year');
-      const monthDiff = this.currentDate.diff(yearStart, 'months');
-      this.currentMonthRow = Math.floor(monthDiff / 3);
-      this.currentMonthCol = monthDiff % 3;
-    } else {
-      this.currentMonthRow = -1;
-      this.currentMonthCol = -1;
-    }
-  }
-
-  private calculateActiveMonth(): void {
-    this.activeMonthRow = Math.floor(this.activeDate.month() / 3);
-    this.activeMonthCol = this.activeDate.month() % 3;
-  }
-}
-
-export interface DayCellContext {
-  title: string;
-  label: string;
-}
-
-export interface MonthCellContext {
-  title: string;
-  label: string;
-  start: Moment;
-}
-
-export interface DateCellContext {
-  title: string;
-  label: string;
-  rel: 'last' | 'current' | 'next';
-  value: Moment;
 }

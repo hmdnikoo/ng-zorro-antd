@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,10 +23,7 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
-import * as momentNs from 'jalali-moment';
-// tslint:disable-next-line:no-duplicate-imports
-import { Moment } from 'jalali-moment';
-const moment = momentNs;
+import { CandyDate } from 'ng-zorro-antd/core';
 import { NzI18nService as I18n } from 'ng-zorro-antd/i18n';
 
 @Component({
@@ -34,35 +39,27 @@ import { NzI18nService as I18n } from 'ng-zorro-antd/i18n';
 })
 export class NzCalendarHeaderComponent implements OnInit {
   @Input() mode: 'month' | 'year' = 'month';
-  @Output() readonly modeChange: EventEmitter<'month' | 'year'> = new EventEmitter();
-
   @Input() fullscreen: boolean = true;
 
-  @Input()
-  set activeDate(value: Moment) {
-    this._activeDate = value;
-    this.setUpYears();
-  }
+  @Output() readonly modeChange: EventEmitter<'month' | 'year'> = new EventEmitter();
 
-  get activeDate(): Moment {
-    return this._activeDate;
-  }
+  @Input() activeDate: CandyDate = new CandyDate();
 
   @Output() readonly yearChange: EventEmitter<number> = new EventEmitter();
   @Output() readonly monthChange: EventEmitter<number> = new EventEmitter();
+  // @Output() readonly valueChange: EventEmitter<CandyDate> = new EventEmitter();
 
-  _activeDate: Moment = moment();
   yearOffset: number = 10;
   yearTotal: number = 20;
   years: Array<{ label: string; value: number }>;
   months: Array<{ label: string; value: number }>;
 
   get activeYear(): number {
-    return this.activeDate.year();
+    return this.activeDate.getYear();
   }
 
   get activeMonth(): number {
-    return this.activeDate.month();
+    return this.activeDate.getMonth();
   }
 
   get size(): string {
@@ -103,8 +100,8 @@ export class NzCalendarHeaderComponent implements OnInit {
     this.months = [];
 
     for (let i = 0; i < 12; i++) {
-      const dateInMonth = this.activeDate.clone().month(i);
-      const monthText = dateInMonth.format('MMM');
+      const dateInMonth = this.activeDate.setMonth(i);
+      const monthText = dateInMonth._moment.format('MMM');
       this.months.push({ label: monthText, value: i });
     }
   }

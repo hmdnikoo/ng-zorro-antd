@@ -6,6 +6,30 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Platform } from '@angular/cdk/platform';
 import {
   AfterContentChecked,
@@ -19,7 +43,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { IconDirective, ThemeType } from '@ant-design/icons-angular';
-import { InputBoolean } from 'ng-zorro-antd/core';
+import { warnDeprecation, InputBoolean } from 'ng-zorro-antd/core';
 import { NzIconService } from './nz-icon.service';
 
 const iconTypeRE = /^anticon\-\w/;
@@ -198,6 +222,12 @@ export class NzIconDirective extends IconDirective implements OnInit, OnChanges,
       this.handleRotate(this.el.firstChild);
     } else {
       this._setSVGElement(this.iconService.createIconfontIcon(`#${this.iconfont}`));
+    }
+
+    if (type && !nzType) {
+      warnDeprecation(
+        `APIs for Icon without 'nz' prefix are deprecated and will be removed in 9.0.0! Please check icons with this type: '${this.type}'.`
+      );
     }
   }
 
