@@ -7,6 +7,7 @@
  */
 
 import { ConnectedOverlayPositionChange, ConnectionPositionPair } from '@angular/cdk/overlay';
+import { POSITION_MAP_RTL } from './overlay-position-rtl';
 
 export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
   top: new ConnectionPositionPair(
@@ -95,11 +96,22 @@ export const DEFAULT_MENTION_POSITIONS = [
   )
 ];
 
-export function getPlacementName(position: ConnectedOverlayPositionChange): string | undefined {
+export function getPlacementName(
+  position: ConnectedOverlayPositionChange,
+  direction: 'ltr' | 'rtl' = 'ltr'
+): string | undefined {
   const keyList = ['originX', 'originY', 'overlayX', 'overlayY'];
-  for (const placement in POSITION_MAP) {
+  let positionMap: { [key: string]: ConnectionPositionPair };
+  positionMap = POSITION_MAP;
+  if (direction === 'rtl') {
+    positionMap = POSITION_MAP_RTL;
+  }
+  console.log(position);
+  console.log(positionMap);
+  for (const placement in positionMap) {
+    console.log('placement in for:' + positionMap[placement]);
     // @ts-ignore
-    if (keyList.every(key => position.connectionPair[key] === POSITION_MAP[placement][key])) {
+    if (keyList.every(key => position.connectionPair[key] === positionMap[placement][key])) {
       return placement;
     }
   }

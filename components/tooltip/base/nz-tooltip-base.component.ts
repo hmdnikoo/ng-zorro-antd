@@ -58,7 +58,6 @@ export abstract class NzTooltipBaseComponent {
     if (this.nzVisible) {
       return;
     }
-
     if (!this.isTitleEmpty() || !this.isContentEmpty()) {
       this.nzVisible = true;
       this.nzVisibleChange.next(true);
@@ -95,7 +94,7 @@ export abstract class NzTooltipBaseComponent {
   }
 
   onPositionChange(position: ConnectedOverlayPositionChange): void {
-    this._placement = getPlacementName(position)!;
+    this._placement = getPlacementName(position, this.overlay.dir)!;
     this.setClassMap();
     this.cdr.detectChanges();
   }

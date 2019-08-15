@@ -16,6 +16,10 @@
   cursor: auto;
   user-select: text;
 
+  [dir="rtl"] & {
+    text-align: right;
+  }
+
   &::after {
     position: absolute;
     background: fade(@white, 1%);
@@ -94,14 +98,29 @@
     }
     &-title {
       padding-left: @font-size-base + 8px;
+      
+      [dir="rtl"] & {
+        padding-left: 0;
+        padding-right: @font-size-base + 8px;
+      }
     }
   }
 
   &-buttons {
     margin-bottom: 4px;
     text-align: right;
+
+    [dir="rtl"] & {
+      text-align: left;
+    }
+
     button {
       margin-left: 8px;
+
+      [dir="rtl"] & {
+        margin-left: 0;
+        margin-right: 8px;
+      }
     }
   }
 

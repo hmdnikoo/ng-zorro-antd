@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import {
   AfterViewInit,
@@ -22,7 +30,7 @@ import {
   SimpleChanges,
   ViewContainerRef
 } from '@angular/core';
-import { isNotNil, warnDeprecation, NgStyleInterface, NzNoAnimationDirective, NzTSType } from 'ng-zorro-antd/core';
+import { isNotNil, warnDeprecation, DEFAULT_TOOLTIP_POSITIONS, NgStyleInterface, NzNoAnimationDirective, NzTSType, POSITION_MAP_RTL } from 'ng-zorro-antd/core';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -181,6 +189,9 @@ export abstract class NzTooltipBaseDirective implements OnChanges, OnInit, OnDes
         this.nzVisibleChange.next(visible);
       });
     this.tooltip.setOverlayOrigin(this as CdkOverlayOrigin);
+    if (this.tooltip.overlay.dir === 'rtl') {
+      this.tooltip._positions = [POSITION_MAP_RTL[this.tooltip.nzPlacement], ...DEFAULT_TOOLTIP_POSITIONS];
+    }
   }
 
   ngAfterViewInit(): void {

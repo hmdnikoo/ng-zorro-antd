@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'nz-demo-popover-placement',
   template: `
-    <div style="margin-left: 60px">
+    <div class="horizantal-group">
       <button
         nz-button
         nz-popover
@@ -84,7 +84,7 @@ import { Component } from '@angular/core';
         RB
       </button>
     </div>
-    <div style="margin-left: 60px; clear: both;">
+    <div class="horizantal-group" style="clear: both;">
       <button
         nz-button
         nz-popover
@@ -122,6 +122,14 @@ import { Component } from '@angular/core';
   `,
   styles: [
     `
+      .horizantal-group {
+        margin-left: 60px;
+      }
+
+      [dir='rtl'] .horizantal-group {
+        margin-left: 0;
+        margin-right: 60px;
+      }
       button {
         margin-right: 8px;
         margin-bottom: 8px;
