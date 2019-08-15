@@ -42,6 +42,13 @@
   }
 
   &-left {
+    left: 0;
+    .@{drawer-prefix-cls} {
+      &-content-wrapper {
+        left: 0;
+      }
+    }
+
     &.@{drawer-prefix-cls}-open {
       .@{drawer-prefix-cls}-content-wrapper {
         box-shadow: @shadow-1-right;
@@ -161,6 +168,12 @@
     &:hover {
       color: @icon-color-hover;
       text-decoration: none;
+    }
+
+    [dir="rtl"] & {
+
+      right:auto;
+      left:0;
     }
   }
 

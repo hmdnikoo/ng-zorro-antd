@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
         </nz-list-item>
       </ng-template>
     </nz-list>
-    <nz-drawer [nzVisible]="visible" [nzWidth]="640" [nzClosable]="false" (nzOnClose)="close()">
+    <nz-drawer [nzVisible]="visible" [nzWidth]="640" [nzClosable]="false" (nzOnClose)="close()" nzPlacement="left">
       <p class="title" style=" margin-bottom: 24px;">User Profile</p>
       <p class="title">Personal</p>
       <div nz-row>
