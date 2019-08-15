@@ -40,7 +40,9 @@
     [class.ant-tabs-content-animated]="tabPaneAnimated"
     [class.ant-tabs-card-content]="nzType === 'card'"
     [class.ant-tabs-content-no-animated]="!tabPaneAnimated"
-    [style.margin-left.%]="(tabPositionMode === 'horizontal') && tabPaneAnimated && (-(nzSelectedIndex || 0 ) * 100)">
+    [style.margin-left.%]="(tabPositionMode === 'horizontal') && tabPaneAnimated && !isRtl && (-(nzSelectedIndex || 0 ) * 100)"
+    [style.margin-right.%] ="(tabPositionMode === 'horizontal') && tabPaneAnimated && isRtl && (-(nzSelectedIndex || 0 ) * 100)"
+    >
     <div nz-tab-body
       class="ant-tabs-tabpane"
       *ngFor="let tab of listOfNzTabComponent; let i = index"

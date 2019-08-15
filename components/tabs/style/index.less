@@ -181,6 +181,10 @@
       cursor: pointer;
       transition: color 0.3s @ease-in-out;
 
+      [dir = 'rtl'] & {
+        margin: @tabs-horizontal-margin-rtl;
+      }
+      
       &::before {
         position: absolute;
         top: -1px;
@@ -207,6 +211,10 @@
 
       .@{iconfont-css-prefix} {
         margin-right: 8px;
+        [dir = 'rtl'] & {
+          margin-right: 0;
+          margin-left: 8px;
+        }
       }
 
       &-active {
@@ -270,6 +278,10 @@
       flex-direction: row;
       transition: margin-left 0.3s @ease-in-out;
       will-change: margin-left;
+      [dir = 'rtl'] & {
+        transition: margin-right 0.3s @ease-in-out;
+        will-change: margin-right;
+      }
     }
   }
 

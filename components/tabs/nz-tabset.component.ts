@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 /** get some code from https://github.com/angular/material2 */
 
 import {
@@ -37,6 +45,7 @@ import { merge, Subject, Subscription } from 'rxjs';
 import { toNumber, InputBoolean, NzSizeLDSType, NzUpdateHostClassService, PREFIX } from 'ng-zorro-antd/core';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 
+import { Directionality } from '@angular/cdk/bidi';
 import { NzTabComponent } from './nz-tab.component';
 import { NzTabsNavComponent } from './nz-tabs-nav.component';
 
@@ -122,6 +131,10 @@ export class NzTabSetComponent
     return this.nzAnimated === true || (this.nzAnimated as NzAnimatedInterface).tabPane === true;
   }
 
+  get isRtl(): boolean {
+    return this.dir && this.dir.value === 'rtl';
+  }
+
   setPosition(value: NzTabPosition): void {
     if (this.tabContent) {
       if (value === 'bottom') {
@@ -198,7 +211,8 @@ export class NzTabSetComponent
     private nzUpdateHostClassService: NzUpdateHostClassService,
     private elementRef: ElementRef,
     private cdr: ChangeDetectorRef,
-    @Optional() private router: Router
+    @Optional() private router: Router,
+    @Optional() private dir: Directionality
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {

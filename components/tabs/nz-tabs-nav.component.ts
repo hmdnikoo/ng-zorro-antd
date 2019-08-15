@@ -100,6 +100,10 @@ export class NzTabsNavComponent implements AfterContentChecked, AfterContentInit
     return this._selectedIndex;
   }
 
+  get isRtl(): boolean {
+    return this.getLayoutDirection() === 'rtl';
+  }
+
   constructor(
     public elementRef: ElementRef,
     private ngZone: NgZone,
