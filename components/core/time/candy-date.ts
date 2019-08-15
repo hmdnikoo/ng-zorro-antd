@@ -14,10 +14,18 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import * as momentNs from 'jalali-moment';
 // tslint:disable-next-line:no-duplicate-imports
 import { Moment } from 'jalali-moment';
-import { IndexableObject } from 'ng-zorro-antd/core';
+import { IndexableObject } from '../types';
 const moment = momentNs;
 /**
  * Wrapping kind APIs for date operating and unify
