@@ -41,6 +41,12 @@
     cursor: pointer;
     transition: all @switch-duration @ease-in-out-circ;
     content: ' ';
+
+    [dir="rtl"] & {
+      left: 100%;
+      margin-left: -1px;
+      transform: translateX(-100%);
+    }
   }
 
   &::after {
@@ -112,6 +118,11 @@
   &-small &-loading-icon {
     width: @switch-sm-height - 4px;
     height: @switch-sm-height - 4px;
+    
+    [dir="rtl"] & {
+      margin-left: -12px;
+
+    }
   }
 
   &-small&-checked {
@@ -144,12 +155,22 @@
       left: 100%;
       margin-left: -1px;
       transform: translateX(-100%);
+  
+      [dir="rtl"] & {
+        left: 1px;
+        margin-left: 0;
+        transform: translateX(0);
+      }
     }
   }
 
   &-checked &-loading-icon {
     left: 100%;
     margin-left: -19px;
+    
+    [dir="rtl"] & {
+      margin-left: -23px;
+    }
   }
 
   &-loading,
