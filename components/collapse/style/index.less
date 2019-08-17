@@ -30,6 +30,10 @@
       cursor: pointer;
       transition: all 0.3s;
 
+      [dir="rtl"] &{
+        padding: @collapse-header-padding;
+        padding-right: @collapse-header-padding-extra;
+      }
       .@{collapse-prefix-cls}-arrow {
         .iconfont-mixin();
 
@@ -39,14 +43,25 @@
         display: inline-block;
         font-size: @font-size-sm;
         transform: translateY(-50%);
-
+        
+        [dir="rtl"] &{
+          left: auto;
+          right: @padding-md;
+        }
         & svg {
           transition: transform 0.24s;
+          [dir="rtl"] &{
+            transform: rotate(180deg);
+          }
         }
       }
 
       .@{collapse-prefix-cls}-extra {
         float: right;
+
+        [dir="rtl"] &{
+          float: left;
+        }
       }
 
       &:focus {
@@ -57,6 +72,11 @@
     &.@{collapse-prefix-cls}-no-arrow {
       > .@{collapse-prefix-cls}-header {
         padding-left: 12px;
+
+        [dir="rtl"] &{
+          padding: @collapse-header-padding;
+          padding-right: 12px;
+        }
       }
     }
   }
@@ -72,6 +92,7 @@
           right: @padding-md;
           left: initial;
           background-color: red;
+          
           [dir = "rtl"] & {
             right: initial;
             left: @padding-md;
