@@ -338,6 +338,11 @@
       height: auto;
       margin-bottom: -3px;
       margin-left: 5px;
+
+      [dir="rtl"] & {
+      margin-left: 0;
+      margin-right: 5px;
+      }
     }
 
     .@{select-prefix-cls}-selection__placeholder {
@@ -424,6 +429,9 @@
   &-allow-clear &-selection--multiple &-selection__rendered,
   &-show-arrow &-selection--multiple &-selection__rendered {
     margin-right: 20px; // In case that clear button will overlap content
+    [dir = "rtl"] & {
+      margin-left: 20px;
+    }
   }
 
   &-open {
