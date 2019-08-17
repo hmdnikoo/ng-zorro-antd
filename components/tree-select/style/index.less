@@ -97,6 +97,9 @@
           .@{select-prefix-cls}-switcher-icon {
             svg {
               transform: rotate(-90deg);
+              [dir="rtl"] & {
+                transform: rotate(90deg);
+              }
             }
           }
         }
