@@ -70,17 +70,31 @@
 
     &-closable &-message {
       padding-right: 24px;
+      
+      [dir="rtl"] & {
+        padding-right: 0;
+        padding-left: 24px;
+      }
     }
 
     &-with-icon &-message {
       margin-bottom: 4px;
       margin-left: 48px;
       font-size: @font-size-lg;
+
+      [dir="rtl"] & {
+        margin-left: 0;
+        margin-right: 48px;
+      }
     }
 
     &-with-icon &-description {
       margin-left: 48px;
       font-size: @font-size-base;
+
+      [dir="rtl"] & {
+        margin-right: 48px;
+      }
     }
 
     // Icon & color style in different selector level
@@ -91,6 +105,11 @@
       margin-left: 4px;
       font-size: 24px;
       line-height: 24px;
+
+      [dir="rtl"] & {
+        margin-left: 0;
+        margin-right: 4px;
+      }
     }
 
     .@{iconfont-css-prefix}&-icon {
@@ -115,6 +134,11 @@
       color: @text-color-secondary;
       outline: none;
 
+      [dir="rtl"] & {
+        right: auto;
+        left: 22px;
+      }
+
       &:hover {
         color: shade(@text-color-secondary, 40%);
       }
@@ -123,6 +147,10 @@
     &-btn {
       float: right;
       margin-top: 16px;
+
+      [dir="rtl"] & {
+        float: left;
+      }
     }
   }
 
