@@ -138,10 +138,20 @@ form {
   .has-feedback {
     .@{ant-prefix}-input {
       padding-right: 24px;
+    
+      [dir = 'rtl'] & {
+        padding-right: @input-padding-vertical-lg;
+        padding-left: 24px;
+      }
     }
 
     .@{ant-prefix}-input-password-icon {
       margin-right: 18px;
+    
+      [dir = 'rtl'] & {
+        margin-right: @input-margin-vertical;
+        margin-left: 18px;
+      }
     }
 
     // Fix overlapping between feedback icon and <Select>'s arrow.
@@ -153,20 +163,40 @@ form {
       > .@{ant-prefix}-select
       .@{ant-prefix}-select-selection__clear {
       right: 28px;
+    
+      [dir = 'rtl'] & {
+        right: auto;
+        left: 28px;
+      }
     }
     > .@{ant-prefix}-select .@{ant-prefix}-select-selection-selected-value,
     :not(.@{ant-prefix}-input-group-addon)
       > .@{ant-prefix}-select
       .@{ant-prefix}-select-selection-selected-value {
       padding-right: 42px;
+    
+      [dir = 'rtl'] & {
+        padding-right: 10px;
+        padding-left: 42px;
+      }
     }
 
     .@{ant-prefix}-cascader-picker {
       &-arrow {
         margin-right: 17px;
+    
+        [dir = 'rtl'] & {
+          margin-right: 0;
+          margin-left: 17px;
+        }
       }
       &-clear {
         right: 28px;
+    
+        [dir = 'rtl'] & {
+          right: auto;
+          left: 28px;
+        }
       }
     }
 
@@ -174,6 +204,11 @@ form {
     .@{ant-prefix}-input-search:not(.@{ant-prefix}-input-search-enter-button) {
       .@{ant-prefix}-input-suffix {
         right: 28px;
+    
+        [dir = 'rtl'] & {
+          right: auto;
+          left: 28px;
+        }
       }
     }
 
@@ -183,6 +218,11 @@ form {
       &-icon,
       &-clear {
         right: 28px;
+    
+        [dir = 'rtl'] & {
+          right: auto;
+          left: 28px;
+        }
       }
     }
   }
@@ -385,6 +425,11 @@ form {
     visibility: visible;
     animation: zoomIn 0.3s @ease-out-back;
     pointer-events: none;
+    
+    [dir = 'rtl'] & {
+      right: auto;
+      left: 0;
+    }
 
     & svg {
       position: absolute;
