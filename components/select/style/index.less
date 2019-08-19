@@ -162,6 +162,11 @@
 
     .@{select-prefix-cls}-selection__rendered {
       margin-right: 24px;
+    
+      [dir = 'rtl'] & {
+        margin-right: @control-padding-horizontal - 1px;
+        margin-left: 24px;
+      }
     }
   }
 
