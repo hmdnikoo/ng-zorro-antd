@@ -33,6 +33,10 @@
         .avatar-size(@avatar-size-sm);
       }
     }
+    [dir="rtl"] & {
+      padding-right: 0;
+      padding-left: 16px;
+    }
   }
 
   &-content {
@@ -118,6 +122,9 @@
   );
   background-size: 400% 100%;
   animation: ~'@{skeleton-prefix-cls}-loading' 1.4s ease infinite;
+  [dir="rtl"] & {
+    animation-name: ~'@{skeleton-prefix-cls}-loading-rtl';
+  }
 }
 
 @keyframes ~"@{skeleton-prefix-cls}-loading" {
@@ -126,5 +133,13 @@
   }
   100% {
     background-position: 0 50%;
+  }
+}
+@keyframes ~"@{skeleton-prefix-cls}-loading-rtl" {
+  0% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position: 100% 50%;
   }
 }
