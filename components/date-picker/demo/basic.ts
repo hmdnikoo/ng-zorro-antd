@@ -25,7 +25,6 @@ import { Moment } from 'jalali-moment';
       [nzDateLocale]="dateLocale"
       [(ngModel)]="dateRange"
       (ngModelChange)="onChange($event)"
-      nzShowTime
     ></nz-range-picker>
     <br />
     <nz-week-picker

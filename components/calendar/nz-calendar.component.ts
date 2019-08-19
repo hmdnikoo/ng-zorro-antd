@@ -50,7 +50,7 @@ export class NzCalendarComponent implements ControlValueAccessor, OnInit {
   private onTouchFn: () => void = () => {};
 
   @Input() nzMode: ModeType = 'month';
-  @Input() dateLocale: string;
+  @Input() nzDateLocale: string;
 
   @Output() readonly nzModeChange: EventEmitter<ModeType> = new EventEmitter();
   @Output() readonly nzPanelChange: EventEmitter<{ date: Moment; mode: ModeType }> = new EventEmitter();
@@ -109,7 +109,7 @@ export class NzCalendarComponent implements ControlValueAccessor, OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.activeDate.setLocale(this.dateLocale);
+    this.activeDate.setLocale(this.nzDateLocale);
   }
 
   onModeChange(mode: ModeType): void {

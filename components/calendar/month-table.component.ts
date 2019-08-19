@@ -34,8 +34,8 @@ const MAX_COL = 3;
   templateUrl: 'month-table.component.html'
 })
 export class MonthTableComponent implements OnInit, OnChanges {
-  @Input() value: CandyDate = new CandyDate();
   @Input() dateLocale: string;
+  @Input() value: CandyDate = new CandyDate(new Date(), this.dateLocale);
   @Input() prefixCls: string = 'ant-fullcalendar';
   @Input() monthCellRender: TemplateRef<{ $implicit: Date }>;
   @Input() monthFullCellRender: TemplateRef<{ $implicit: Date }>;
@@ -50,8 +50,11 @@ export class MonthTableComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.value.setLocale(this.dateLocale);
     if (changes.value || changes.disabledDate) {
+      this.render();
+    }
+    if (changes.dateLocale) {
+      this.value = this.value.setLocale(this.dateLocale);
       this.render();
     }
   }

@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -194,7 +202,7 @@ export class DateRangePopupComponent implements OnInit, OnChanges {
 
       if ((!left && !right) || (left && right)) {
         // If totally full or empty, clean up && re-assign left first
-        this.hoverValue = this.selectedValue = [value];
+        this.hoverValue = this.selectedValue = [value.clone()];
         this.calendarChange.emit([value.clone()]);
       } else if (left && !right) {
         // If one of them is empty, assign the other one and sort, then set the final values
@@ -206,7 +214,7 @@ export class DateRangePopupComponent implements OnInit, OnChanges {
         this.calendarChange.emit(this.cloneRangeDate(this.selectedValue));
       }
     } else {
-      this.setValue(value);
+      this.setValue(value.clone());
     }
     // this.selectDate.emit(value);
   }
@@ -214,7 +222,7 @@ export class DateRangePopupComponent implements OnInit, OnChanges {
   enablePrevNext(direction: 'prev' | 'next', partType?: RangePartType): boolean {
     if (this.isRange) {
       const [start, end] = this.valueForRangeShow;
-      const showMiddle = !start.addMonths(1).isSame(end, 'month'); // One month diff then don't show middle prev/next
+      const showMiddle = !start.clone().addMonths(1).isSame(end, 'month'); // One month diff then don't show middle prev/next
       if ((partType === 'left' && direction === 'next') || (partType === 'right' && direction === 'prev')) {
         return showMiddle;
       }

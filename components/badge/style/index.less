@@ -67,6 +67,10 @@
       height: @badge-status-size;
       vertical-align: middle;
       border-radius: 50%;
+
+      [dir="rtl"] & {
+        margin-left: 8px;
+      }
     }
     &-success {
       background-color: @success-color;
@@ -111,6 +115,10 @@
       margin-left: 8px;
       color: @text-color;
       font-size: @font-size-base;
+
+      [dir="rtl"] & {
+        margin-left:0;
+      }
     }
   }
 

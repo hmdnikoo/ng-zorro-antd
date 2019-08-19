@@ -19,8 +19,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import { CandyDate } from 'ng-zorro-antd/core';
@@ -37,13 +39,14 @@ import { NzI18nService as I18n } from 'ng-zorro-antd/i18n';
     '[class.ant-fullcalendar-header]': `true`
   }
 })
-export class NzCalendarHeaderComponent implements OnInit {
+export class NzCalendarHeaderComponent implements OnInit, OnChanges {
   @Input() mode: 'month' | 'year' = 'month';
   @Input() fullscreen: boolean = true;
+  @Input() dateLocale: string;
 
   @Output() readonly modeChange: EventEmitter<'month' | 'year'> = new EventEmitter();
 
-  @Input() activeDate: CandyDate = new CandyDate();
+  @Input() activeDate: CandyDate = new CandyDate(new Date(), this.dateLocale);
 
   @Output() readonly yearChange: EventEmitter<number> = new EventEmitter();
   @Output() readonly monthChange: EventEmitter<number> = new EventEmitter();
@@ -76,6 +79,13 @@ export class NzCalendarHeaderComponent implements OnInit {
 
   constructor(private i18n: I18n) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.dateLocale) {
+      this.activeDate = this.activeDate.setLocale(this.dateLocale);
+      this.setUpYears();
+      this.setUpMonths();
+    }
+  }
   ngOnInit(): void {
     this.setUpYears();
     this.setUpMonths();
@@ -100,7 +110,7 @@ export class NzCalendarHeaderComponent implements OnInit {
     this.months = [];
 
     for (let i = 0; i < 12; i++) {
-      const dateInMonth = this.activeDate.setMonth(i);
+      const dateInMonth = this.activeDate.clone().setMonth(i);
       const monthText = dateInMonth._moment.format('MMM');
       this.months.push({ label: monthText, value: i });
     }
