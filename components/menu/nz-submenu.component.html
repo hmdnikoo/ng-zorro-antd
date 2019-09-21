@@ -2,7 +2,8 @@
      #origin="cdkOverlayOrigin"
      [class.ant-dropdown-menu-submenu-title]="nzMenuService.isInDropDown"
      [class.ant-menu-submenu-title]="!nzMenuService.isInDropDown"
-     [style.paddingLeft.px]="nzMenuService.mode === 'inline'? (nzPaddingLeft ? nzPaddingLeft : nzSubmenuService.level * nzMenuService.inlineIndent) : null"
+     [style.paddingLeft.px]="!isRtlLayout() && nzMenuService.mode === 'inline'? (nzPaddingStart ? nzPaddingStart : nzSubmenuService.level * nzMenuService.inlineIndent) : null"
+     [style.paddingRight.px]="isRtlLayout() && nzMenuService.mode === 'inline'? (nzPaddingStart ? nzPaddingStart : nzSubmenuService.level * nzMenuService.inlineIndent) : null"
      (mouseenter)="setMouseEnterState(true)"
      (mouseleave)="setMouseEnterState(false)"
      (click)="clickSubMenuTitle()">

@@ -80,7 +80,7 @@ import { NzSubmenuService } from './nz-submenu.service';
 })
 export class NzSubMenuComponent implements OnInit, OnDestroy, AfterContentInit, OnChanges {
   @Input() nzMenuClassName: string;
-  @Input() nzPaddingLeft: number;
+  @Input() nzPaddingStart: number;
   @Input() nzTitle: string | TemplateRef<void>;
   @Input() nzIcon: string;
   @Input() @InputBoolean() nzOpen = false;
@@ -227,6 +227,9 @@ export class NzSubMenuComponent implements OnInit, OnDestroy, AfterContentInit, 
   }
   getLayoutDirection(): Direction {
     return this.dir && this.dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+  isRtlLayout(): boolean {
+    return this.getLayoutDirection() === 'rtl';
   }
   ngOnDestroy(): void {
     this.destroy$.next();

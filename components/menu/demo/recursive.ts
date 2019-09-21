@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
           <li
             *ngIf="!menu.children"
             nz-menu-item
-            [nzPaddingLeft]="menu.level * 24"
+            [nzPaddingStart]="menu.level * 24"
             [nzDisabled]="menu.disabled"
             [nzSelected]="menu.selected"
           >
@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
           <li
             *ngIf="menu.children"
             nz-submenu
-            [nzPaddingLeft]="menu.level * 24"
+            [nzPaddingStart]="menu.level * 24"
             [nzOpen]="menu.open"
             [nzTitle]="menu.title"
             [nzIcon]="menu.icon"

@@ -6,6 +6,14 @@
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
+/**
+ * @license
+ * Copyright Alibaba.com All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
+ */
+
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
   AfterContentInit,
@@ -42,7 +50,7 @@ export class NzMenuItemDirective implements OnInit, OnChanges, OnDestroy, AfterC
   selected$ = new Subject<boolean>();
   @Input() @InputBoolean() nzDisabled = false;
   @Input() @InputBoolean() nzSelected = false;
-  @Input() nzPaddingLeft: number;
+  @Input() nzPaddingStart: number;
   @Input() @InputBoolean() nzMatchRouterExact = false;
   @Input() @InputBoolean() nzMatchRouter = false;
   @ContentChildren(RouterLink, { descendants: true }) listOfRouterLink: QueryList<RouterLink>;
@@ -136,6 +144,10 @@ export class NzMenuItemDirective implements OnInit, OnChanges, OnDestroy, AfterC
     if (paddingLeft) {
       this.originalPadding = parseInt(paddingLeft, 10);
     }
+    const paddingRight = this.el.style.paddingRight;
+    if (this.isRtlLayout() && paddingRight) {
+      this.originalPadding = parseInt(paddingRight, 10);
+    }
     merge(
       this.nzMenuService.mode$,
       this.nzMenuService.inlineIndent$,
@@ -145,8 +157,8 @@ export class NzMenuItemDirective implements OnInit, OnChanges, OnDestroy, AfterC
       .subscribe(() => {
         let padding: number | null = null;
         if (this.nzMenuService.mode === 'inline') {
-          if (isNotNil(this.nzPaddingLeft)) {
-            padding = this.nzPaddingLeft;
+          if (isNotNil(this.nzPaddingStart)) {
+            padding = this.nzPaddingStart;
           } else {
             const level = this.nzSubmenuService ? this.nzSubmenuService.level + 1 : 1;
             padding = level * this.nzMenuService.inlineIndent;
@@ -155,7 +167,7 @@ export class NzMenuItemDirective implements OnInit, OnChanges, OnDestroy, AfterC
           padding = this.originalPadding;
         }
         let paddingName = 'padding-left';
-        if (this.getLayoutDirection() === 'rtl') {
+        if (this.isRtlLayout()) {
           paddingName = 'padding-right';
         }
         if (padding) {
@@ -184,6 +196,9 @@ export class NzMenuItemDirective implements OnInit, OnChanges, OnDestroy, AfterC
 
   getLayoutDirection(): Direction {
     return this.dir && this.dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+  isRtlLayout(): boolean {
+    return this.getLayoutDirection() === 'rtl';
   }
   ngOnDestroy(): void {
     this.destroy$.next();

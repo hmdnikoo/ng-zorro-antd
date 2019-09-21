@@ -105,6 +105,11 @@
     background: @modal-footer-bg;
     border-top: @border-width-base @border-style-base @border-color-split;
     border-radius: 0 0 @border-radius-base @border-radius-base;
+    
+    [dir = "rtl"] & {
+      text-align: left;
+    }
+    
     button + button {
       margin-bottom: 0;
       margin-left: 8px;
@@ -114,9 +119,6 @@
       }
     }
 
-    [dir = "rtl"] & {
-      text-align: left;
-    }
   }
 
   &.zoom-enter,
