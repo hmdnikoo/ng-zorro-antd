@@ -35,6 +35,7 @@ import { Moment } from 'jalali-moment';
     ></nz-week-picker>
     <br />
     <button nz-button nzType="default" (click)="changeLanguage()">Switch language for all pickers</button>
+    <h3>{{ date }}</h3>
   `,
   styles: [
     `

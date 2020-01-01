@@ -16,6 +16,7 @@
     <today-button
       *ngIf="showToday"
       [locale]="locale"
+      [dateLocale]="dateLocale"
       [disabledDate]="disabledDate"
       [hasTimePicker]="hasTimePicker"
       (clickToday)="clickToday.emit($event)"
