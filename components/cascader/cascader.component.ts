@@ -380,8 +380,8 @@ export class NzCascaderComponent implements NzCascaderComponentAsSource, OnInit,
       });
 
     this.dir = this.directionality.value;
-    this.directionality.change?.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dir = this.directionality.value;
+    this.directionality.change?.pipe(takeUntil(this.destroy$)).subscribe((direction: Direction) => {
+      this.dir = direction;
     });
   }
 
